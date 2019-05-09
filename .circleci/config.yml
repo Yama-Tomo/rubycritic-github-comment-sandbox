@@ -24,7 +24,8 @@ jobs:
             git branch
             git checkout master
             git reset --hard origin/master
-            git checkout $current_branch
+            git checkout feature2
+            git branch
 
             mkdir -p tmp/rubycritic
             rubycritic -t 100 --mode-ci master --no-browser ./app ./lib
