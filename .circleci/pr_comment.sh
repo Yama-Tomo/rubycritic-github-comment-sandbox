@@ -12,7 +12,9 @@ else
   mark="+${compare_score} :arrow_up:"
 fi
 
-body="{\"body\": \"**Current score**: $feature_score (master: $master_score, $mark)\"}"
+report_url="https://circle-artifacts.com/gh/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME/$CIRCLE_BUILD_NUM/artifacts/0/$RUBYCRITIC_REPORT_ROOT_PATH/compare/master/compare/$CIRCLE_BRANCH/overview.html"
+
+body="{\"body\": \"**Current score**: [$feature_score]($report_url) (master: $master_score, $mark)\"}"
 
 curl -XPOST \
   -H "Authorization: token $GITHUB_ACCESS_TOKEN" \
