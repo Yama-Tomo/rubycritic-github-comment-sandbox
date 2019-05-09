@@ -1,8 +1,8 @@
 #!/bin/sh
 
-master_score=`head -n 1 $REPORT_PATH/compare/build_details.txt | awk '{print $5}'`
+base_score=`head -n 1 $REPORT_PATH/compare/build_details.txt | awk '{print $5}'`
 feature_score=`head -n 2 $REPORT_PATH/compare/build_details.txt | tail -n 1 | awk '{print $5}'`
-compare_score=`echo $feature_score | awk '{print $1-'$master_score'}'`
+compare_score=`echo $feature_score | awk '{print $1-'$base_score'}'`
 
 if [ "$compare_score" = "0" ]; then
   mark="±0"
@@ -12,9 +12,9 @@ else
   mark="+${compare_score} :arrow_up:"
 fi
 
-report_url="https://circle-artifacts.com/gh/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME/$CIRCLE_BUILD_NUM/artifacts/0/$REPORT_PATH/compare/master/compare/$CIRCLE_BRANCH/overview.html"
+report_url="https://circle-artifacts.com/gh/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME/$CIRCLE_BUILD_NUM/artifacts/0/$REPORT_PATH/compare/$BASE_BRANCH/compare/$CIRCLE_BRANCH/overview.html"
 
-body="{\"body\": \"## Rubycritic report :chart_with_upwards_trend:\n **Current score**: <a href='$report_url' target='_blank'>$feature_score</a> (master: $master_score, $mark)\"}"
+body="{\"body\": \"## Rubycritic report :chart_with_upwards_trend:\n **Current score**: <a href='$report_url' target='_blank'>$feature_score</a> ($BASE_BRANCH: $base_score, $mark)\"}"
 
 curl -XPOST \
   -H "Authorization: token $GITHUB_ACCESS_TOKEN" \
