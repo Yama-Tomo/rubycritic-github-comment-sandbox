@@ -18,8 +18,12 @@ jobs:
             export PR_NUMBER=`echo $CI_PULL_REQUEST | awk -F/ '{print $(NF-0)}'`
             gem install -N rubycritic
 
-            # NOTE: 比較するmasterブランチの最新状態を取得する必要があるのでfetchする
-            git fetch origin master:master
+            # NOTE: 比較するmasterブランチの最新状態にする
+            current_branch=`git branch` 
+            git fetch origin
+            git checkout master
+            git reset --hard origin/master
+            git checkout $current_branch
 
             mkdir -p tmp/rubycritic
             rubycritic -t 100 --mode-ci master --no-browser ./app ./lib
