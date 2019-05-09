@@ -15,7 +15,7 @@ jobs:
               exit 0
             fi
 
-            git fetch origin/master
+            git fetch origin
             export PR_NUMBER=`echo $CI_PULL_REQUEST | awk -F/ '{print $(NF-0)}'`
             gem install rubycritic
             rubycritic -t 100 --mode-ci origin/master --no-browser ./app ./lib
