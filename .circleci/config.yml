@@ -2,6 +2,8 @@ version: 2
 
 jobs:
   rubycritic:
+    environment:
+      REPORT_PATH: /report 
     parallelism: 1
     working_directory: ~/work
     docker:
@@ -25,12 +27,12 @@ jobs:
             git reset --hard origin/master
             git checkout $current_branch
 
-            mkdir -p tmp/rubycritic
-            rubycritic -t 100 --mode-ci master --no-browser ./app ./lib
+            mkdir -p ${REPORT_PATH}
+            rubycritic -t 100 --mode-ci master --no-browser -p ${REPORT_PATH} ./app ./lib
             .circleci/pr_comment.sh
 
       - store_artifacts:
-          path: tmp/rubycritic
+          path: ${REPORT_PATH}
 
 workflows:
   version: 2
