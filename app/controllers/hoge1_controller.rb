@@ -8,53 +8,23 @@ class SessionsController < Devise::SessionsController
   end
 
   def hoge
-    a = 1  
     b = 1
-    c = 3
-    d = a
-
-    e = 1 if b 
-    g = 1 unless c
   end
 
   def hoge2
     a = 1  
-    b = 1
-    c = 3
-    d = a
-
-    e = 1 if b 
-    g = 1 unless c
   end
 
   def hoge3
     a = 1  
-    b = 1
-    c = 3
-    d = a
-
-    e = 1 if b 
-    g = 1 unless c
   end
 
   def hoge4
     a = 1  
-    b = 1
-    c = 3
-    d = a
-
-    e = 1 if b 
-    g = 1 unless c
   end
 
   def hoge5
     a = 1  
-    b = 1
-    c = 3
-    d = a
-
-    e = 1 if b 
-    g = 1 unless c
   end
 
   def verify_authentication
