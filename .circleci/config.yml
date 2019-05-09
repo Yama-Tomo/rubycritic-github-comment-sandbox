@@ -19,9 +19,10 @@ jobs:
             gem install -N rubycritic
 
             # NOTE: 比較するmasterブランチの最新状態を取得する必要があるのでfetchする
-            git fetch origin
+            git fetch origin master:master
+
             mkdir -p tmp/rubycritic
-            rubycritic -t 100 --mode-ci origin/master --no-browser ./app ./lib
+            rubycritic -t 100 --mode-ci master --no-browser ./app ./lib
             .circleci/pr_comment.sh
 
       - store_artifacts:
