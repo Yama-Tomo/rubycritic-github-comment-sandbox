@@ -10,14 +10,12 @@ jobs:
       - checkout
       - run:
           command: |
-            if [[ $CI_PULL_REQUEST =~ ([0-9]*)$ ]]; then
-              PR_NUMBER=${BASH_REMATCH[1]}
-            else
+            if [ "$CI_PULL_REQUEST" = "" ]; then
               echo 'skip: PR not create yet'
               exit 0
             fi
 
-
+            export PR_NUMBER=echo $CI_PULL_REQUEST | awk -F/ '{print $(NF-0)}'
             echo " - $PR_NUMBER - "
             exit 0
 
