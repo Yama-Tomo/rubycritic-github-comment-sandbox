@@ -16,8 +16,11 @@ jobs:
             fi
 
             export PR_NUMBER=`echo $CI_PULL_REQUEST | awk -F/ '{print $(NF-0)}'`
-            gem install rubycritic
-            rubycritic -t 100 --mode-ci master --no-browser ./app ./lib
+            gem install -N rubycritic
+
+            # NOTE: 比較するmasterブランチの最新状態を取得する必要があるのでfetchする
+            git fetch origin
+            rubycritic -t 100 --mode-ci origin/master --no-browser ./app ./lib
             .circleci/pr_comment.sh
 
 workflows:
