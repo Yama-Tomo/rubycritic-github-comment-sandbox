@@ -19,13 +19,11 @@ jobs:
             gem install -N rubycritic
 
             # NOTE: 比較するmasterブランチの最新状態にする
-            current_branch=`git branch` 
+            current_branch=`git symbolic-ref --short HEAD` 
             git fetch origin
-            git branch
             git checkout master
             git reset --hard origin/master
-            git checkout feature2
-            git branch
+            git checkout $current_branch
 
             mkdir -p tmp/rubycritic
             rubycritic -t 100 --mode-ci master --no-browser ./app ./lib
