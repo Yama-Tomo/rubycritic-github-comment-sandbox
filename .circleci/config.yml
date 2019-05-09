@@ -15,10 +15,7 @@ jobs:
               exit 0
             fi
 
-            export PR_NUMBER=echo $CI_PULL_REQUEST | awk -F/ '{print $(NF-0)}'
-            echo " - $PR_NUMBER - "
-            exit 0
-
+            export PR_NUMBER=`echo $CI_PULL_REQUEST | awk -F/ '{print $(NF-0)}'`
             gem install rubycritic
             rubycritic -t 100 --mode-ci master --no-browser ./app ./lib
             .circleci/pr_comment.sh
