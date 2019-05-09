@@ -21,6 +21,7 @@ jobs:
             # NOTE: 比較するmasterブランチの最新状態にする
             current_branch=`git branch` 
             git fetch origin
+            git branch
             git checkout master
             git reset --hard origin/master
             git checkout $current_branch
