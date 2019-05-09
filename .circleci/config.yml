@@ -4,6 +4,7 @@ jobs:
   rubycritic:
     environment:
       REPORT_PATH: /report 
+      BASE_BRANCH: master
     parallelism: 1
     working_directory: ~/work
     docker:
@@ -21,15 +22,14 @@ jobs:
             export PR_NUMBER=`echo $CI_PULL_REQUEST | awk -F/ '{print $(NF-0)}'`
             gem install -N rubycritic
 
-            # NOTE: 比較するmasterブランチの最新状態にする
-            current_branch=`git symbolic-ref --short HEAD` 
+            # NOTE: 比較する元のブランチを最新状態にする
             git fetch origin
-            git checkout master
-            git reset --hard origin/master
-            git checkout $current_branch
+            git checkout $BASE_BRANCH
+            git reset --hard origin/$BASE_BRANCH
+            git checkout $CIRCLE_BRANCH
 
-            mkdir -p ${REPORT_PATH}
-            rubycritic -t 100 --mode-ci master --no-browser -p ${REPORT_PATH} ./app ./lib
+            mkdir -p $REPORT_PATH
+            rubycritic -t 100 --mode-ci $BASE_BRANCH --no-browser -p $REPORT_PATH ./app ./lib
             .circleci/pr_comment.sh
 
       - store_artifacts:
