@@ -20,8 +20,12 @@ jobs:
 
             # NOTE: 比較するmasterブランチの最新状態を取得する必要があるのでfetchする
             git fetch origin
+            mkdir -p tmp/rubycritic
             rubycritic -t 100 --mode-ci origin/master --no-browser ./app ./lib
             .circleci/pr_comment.sh
+
+      - store_artifacts:
+          path: tmp/rubycritic
 
 workflows:
   version: 2
