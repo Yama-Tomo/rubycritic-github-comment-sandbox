@@ -1,0 +1,27 @@
+version: 2
+
+jobs:
+  rubycritic:
+    parallelism: 1
+    working_directory: ~/work
+    docker:
+      - image: ruby:2.6.3
+    steps:
+      - checkout
+      - run:
+          command: |
+            if [ "$CI_PULL_REQUEST" = "" ]; then
+              echo 'skip: PR not create yet'
+              exit 0
+            fi
+
+            export PR_NUMBER=`echo $CI_PULL_REQUEST | awk -F/ '{print $(NF-0)}'`
+            gem install rubycritic
+            rubycritic -t 100 --mode-ci master --no-browser ./app ./lib
+            .circleci/pr_comment.sh
+
+workflows:
+  version: 2
+  build:
+    jobs:
+      - rubycritic
