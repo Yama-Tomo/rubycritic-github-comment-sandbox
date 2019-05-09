@@ -32,7 +32,7 @@ jobs:
             .circleci/pr_comment.sh
 
       - store_artifacts:
-          path: ${REPORT_PATH}
+          path: /report
 
 workflows:
   version: 2

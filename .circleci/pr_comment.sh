@@ -1,7 +1,7 @@
 #!/bin/sh
 
-master_score=`head -n 1 tmp/rubycritic/compare/build_details.txt | awk '{print $5}'`
-feature_score=`head -n 2 tmp/rubycritic/compare/build_details.txt | tail -n 1 | awk '{print $5}'`
+master_score=`head -n 1 $REPORT_PATH/compare/build_details.txt | awk '{print $5}'`
+feature_score=`head -n 2 $REPORT_PATH/compare/build_details.txt | tail -n 1 | awk '{print $5}'`
 compare_score=`echo $feature_score | awk '{print $1-'$master_score'}'`
 
 if [ "$compare_score" = "0" ]; then
