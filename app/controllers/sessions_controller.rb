@@ -7,6 +7,16 @@ class SessionsController < Devise::SessionsController
     render json: { :user => { id: current_user.id, email: current_user.email } }
   end
 
+  def hoge
+    a = 1  
+    b = 1
+    c = 3
+    d = a
+
+    e = 1 if b 
+    g = 1 unless c
+  end
+
   def verify_authentication
     unless user_signed_in?
       render json: { error: 'forbidden' }, status: 403
