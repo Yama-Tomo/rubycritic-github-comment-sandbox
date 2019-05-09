@@ -11,6 +11,7 @@ jobs:
     steps:
       - checkout
       - run:
+          name: rubycritic
           command: |
             if [ "$CI_PULL_REQUEST" = "" ]; then
               echo 'skip: PR not create yet'
