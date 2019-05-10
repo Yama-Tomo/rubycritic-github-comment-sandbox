@@ -8,9 +8,6 @@ class SessionsController < Devise::SessionsController
   end
 
   def hoge
-    a = 1  
-    b = 1
-    c = 3
     d = a
 
     e = 1 if b 
