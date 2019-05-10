@@ -35,8 +35,3 @@ jobs:
       - store_artifacts:
           path: /report
 
-workflows:
-  version: 2
-  build:
-    jobs:
-      - rubycritic
