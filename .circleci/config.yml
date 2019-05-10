@@ -1,6 +1,13 @@
 version: 2
 
 jobs:
+  dummy:
+    parallelism: 1
+    working_directory: ~/work
+    docker:
+      - image: ruby:2.6.3
+    steps:
+      - checkout
   rubycritic:
     environment:
       REPORT_PATH: /report 
@@ -13,25 +20,7 @@ jobs:
       - checkout
       - run:
           name: rubycritic
-          command: |
-            if [ "$CI_PULL_REQUEST" = "" ]; then
-              echo 'skip: PR not create yet'
-              exit 0
-            fi
-
-            export PR_NUMBER=`echo $CI_PULL_REQUEST | awk -F/ '{print $(NF-0)}'`
-            gem install -N rubycritic
-
-            # NOTE: 比較する元のブランチを最新状態にする
-            git fetch origin
-            git checkout $BASE_BRANCH
-            git reset --hard origin/$BASE_BRANCH
-            git checkout $CIRCLE_BRANCH
-
-            mkdir -p $REPORT_PATH
-            rubycritic -t 100 --mode-ci $BASE_BRANCH --no-browser -p $REPORT_PATH ./app ./lib
-            .circleci/pr_comment.sh
-
+          command: .circleci/rubycritic.sh
       - store_artifacts:
           path: /report
 
@@ -39,4 +28,8 @@ workflows:
   version: 2
   build:
     jobs:
-      - rubycritic
+      - dummy:
+          filters:
+            branches:
+              only: dummy
+
