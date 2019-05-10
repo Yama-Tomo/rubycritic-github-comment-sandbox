@@ -8,12 +8,8 @@ class SessionsController < Devise::SessionsController
   end
 
   def hoge
-    d = a
-
-    e = 1 if b 
-    g = 1 unless c
-    h = a
-    i = a
+    h = 1
+    i = 2
   end
 
   def verify_authentication
