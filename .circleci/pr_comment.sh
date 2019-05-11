@@ -14,7 +14,7 @@ fi
 
 report_url="https://circle-artifacts.com/gh/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME/$CIRCLE_BUILD_NUM/artifacts/0/$REPORT_PATH/compare/$BASE_BRANCH/compare/$CIRCLE_BRANCH/overview.html"
 
-body="{\"body\": \"## Rubycritic report :chart_with_upwards_trend:\n **Current score**: <a href='$report_url' target='_blank'>$feature_score</a> ($BASE_BRANCH: $base_score, $mark)\"}"
+body="{\"body\": \"**Rubycritic** current score: <a href='$report_url' target='_blank'>$feature_score</a> ($BASE_BRANCH: $base_score, $mark)\"}"
 
 curl -XPOST \
   -H "Authorization: token $GITHUB_ACCESS_TOKEN" \
