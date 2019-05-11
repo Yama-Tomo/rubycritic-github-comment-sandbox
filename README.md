@@ -3,4 +3,5 @@
 > PR作成時に rubycriticのスコアをコメントするサンプル
 
 update
+update
 
