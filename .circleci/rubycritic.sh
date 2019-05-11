@@ -7,7 +7,12 @@ fi
 
 git fetch origin
 
-if [ `git diff --name-only origin/$BASE_BRANCH | grep -c \.rb` -eq 0 ]; then
+compare="origin/$BASE_BRANCH"
+if [ "$BEFORE_REVISION" != "" -a "$AFTER_REVISION" != "" ]; then
+  compare="$BEFORE_REVISION..$AFTER_REVISION"
+fi
+
+if [ `git diff --name-only $compare | grep -c \.rb` -eq 0 ]; then
   echo 'skip: not change ruby files'
   exit 0
 fi

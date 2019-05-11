@@ -28,8 +28,4 @@ workflows:
   version: 2
   build:
     jobs:
-      - dummy:
-          filters:
-            branches:
-              only: dummy
-
+      - dummy
