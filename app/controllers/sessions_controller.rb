@@ -21,8 +21,6 @@ class SessionsController < Devise::SessionsController
   def hoge2
     var = "aaaaa"  
     var = "bbbbb"  
-    var2 = "ccccc"  
-    var2 = "ddddd"  
   end  
 
   def verify_authentication
