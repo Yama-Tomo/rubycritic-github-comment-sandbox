@@ -27,6 +27,26 @@ class SessionsController < Devise::SessionsController
     a = 1
   end
 
+  def hoge6
+    a = 1
+    a = 1
+    a = 1
+    a = 1
+    a = 1
+    a = 1
+    a = 1
+    a = 1
+  end
+
+  def hoge7
+    a = 1
+  end
+
+  def hoge8
+    a = 1
+  end
+
+
   def verify_authentication
     unless user_signed_in?
       render json: { error: 'forbidden' }, status: 403
