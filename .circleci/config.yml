@@ -14,7 +14,7 @@ jobs:
           name: reviewdog
           command: |
             curl -sfL https://raw.githubusercontent.com/reviewdog/reviewdog/master/install.sh | sh -s
-            export REVIEWDOG_TOKEN=$GITHUB_ACCESS_TOKEN
+            export REVIEWDOG_GITHUB_API_TOKEN=$GITHUB_ACCESS_TOKEN
             bundle exec rubocop | ./bin/reviewdog -f=rubocop -reporter=github-pr-check
   rubycritic:
     environment:
