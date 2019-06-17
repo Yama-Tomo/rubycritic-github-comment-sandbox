@@ -1,13 +1,21 @@
 version: 2
 
 jobs:
-  dummy:
+  reviewdog:
     parallelism: 1
     working_directory: ~/work
+    environment:
+      RAILS_ENV: test
     docker:
       - image: ruby:2.6.3
     steps:
       - checkout
+      - run:
+          name: reviewdog
+          command: |
+            curl -sfL https://raw.githubusercontent.com/reviewdog/reviewdog/master/install.sh | sh -s
+            export REVIEWDOG_TOKEN=$GITHUB_ACCESS_TOKEN
+            bundle exec rubocop | ./bin/reviewdog -f=rubocop -reporter=github-pr-check
   rubycritic:
     environment:
       REPORT_PATH: /report 
@@ -28,4 +36,4 @@ workflows:
   version: 2
   build:
     jobs:
-      - dummy
+      - reviewdog
