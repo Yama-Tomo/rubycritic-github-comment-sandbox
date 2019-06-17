@@ -17,6 +17,14 @@ class SessionsController < Devise::SessionsController
     g = 1 unless c
   end
 
+
+  def hoge2
+    var = "aaaaa"  
+    var = "bbbbb"  
+    var2 = "ccccc"  
+    var2 = "ddddd"  
+  end  
+
   def verify_authentication
     unless user_signed_in?
       render json: { error: 'forbidden' }, status: 403
