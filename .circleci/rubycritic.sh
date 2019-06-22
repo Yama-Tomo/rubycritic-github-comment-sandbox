@@ -59,6 +59,17 @@ do
 done
 [ ${#add_file_section[@]} -ne 0 ] && body=$body"## add files\n"$(IFS=$'\n'; echo "${add_file_section[*]}")"\n"
 
+############ change files score
+temp_path=$(mktemp -d)
+change_file_section=()
+for file in `git diff --name-only --diff-filter=M origin/$BASE_BRANCH | grep \.rb`
+do
+  rubycritic -t 100 --mode-ci $BASE_BRANCH --no-browser -p $temp_path $file
+  result=(`compare_score $temp_path`)
+  change_file_section+=("- $file ${result[1]} ($BASE_BRANCH: ${result[0]}, ${result[2]}${result[3]})")
+done
+[ ${#change_file_section[@]} -ne 0 ] && body=$body"## change files\n"$(IFS=$'\n'; echo "${change_file_section[*]}")"\n"
+
 body=$body"</details>"
 
 export PR_NUMBER=`echo $CI_PULL_REQUEST | awk -F/ '{print $(NF-0)}'`
