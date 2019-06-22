@@ -41,11 +41,24 @@ compare_score () {
 gem install -N rubycritic
 mkdir -p $REPORT_PATH
 
+############ branch score
 rubycritic -t 100 --mode-ci $BASE_BRANCH --no-browser -p $REPORT_PATH ./app ./lib
 result=(`compare_score`)
 report_url="https://circle-artifacts.com/gh/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME/$CIRCLE_BUILD_NUM/artifacts/0/$REPORT_PATH/compare/$BASE_BRANCH/compare/$CIRCLE_BRANCH/overview.html"
 
 body="**Rubycritic** current score: <a href='$report_url' target='_blank'>${result[1]}</a> ($BASE_BRANCH: ${result[0]}, ${result[2]}${result[3]})"
+body=$body"<details><summary>more details</summary>\n\n"
+
+############ add files score
+add_file_section=()
+for file in `git diff --name-only --diff-filter=A origin/$BASE_BRANCH | grep \.rb`
+do
+  score=`rubycritic --no-browser $file | grep Score | cut -d : -f 2`
+  add_file_section+=("- $file $score")
+done
+[ ${#add_file_section[@]} -ne 0 ] && body=$body"## add files\n"$(IFS=$'\n'; echo "${add_file_section[*]}")"\n"
+
+body=$body"</details>"
 
 export PR_NUMBER=`echo $CI_PULL_REQUEST | awk -F/ '{print $(NF-0)}'`
 curl -XPOST \
