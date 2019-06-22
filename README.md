@@ -6,7 +6,7 @@ masterブランチとのスコアの差分をPRのコメントへPOSTします
 
 <img width="728" src="https://user-images.githubusercontent.com/4970917/59962945-5858f980-9527-11e9-80bd-11960be2f257.png">
 
-[demo](https://github.com/Yama-Tomo/rubycritic-github-comment-sandbox/pull/12)
+[demo](https://github.com/Yama-Tomo/rubycritic-github-comment-sandbox/pull/17)
 
 ## How to configuration
 
