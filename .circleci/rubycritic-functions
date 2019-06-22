@@ -1,0 +1,85 @@
+compare_score () {
+  local rubycritic_out_path=$1
+  local base_score=`head -n 1 $rubycritic_out_path/compare/build_details.txt | awk '{print $5}'`
+  local feature_score=`head -n 2 $rubycritic_out_path/compare/build_details.txt | tail -n 1 | awk '{print $5}'`
+  local compare_score=`echo $feature_score | awk '{print $1-'$base_score'}'`
+
+  if [ "$compare_score" = "0" ]; then
+    local mark="±0"
+  elif [ `echo $compare_score | cut -c 1` = "-" ]; then
+    local mark="${compare_score} :arrow_down:"
+  else
+    local mark="+${compare_score} :arrow_up:"
+  fi
+
+  echo "$base_score" "$feature_score" "$mark"
+}
+
+branch_score_section () {
+  local base_branch=$1
+  local report_path=$2
+  local target=$3
+  local report_url=$4
+  #rubycritic -t 100 --mode-ci $base_branch --no-browser -p $report_path ./app ./lib
+  rubycritic -t 100 --mode-ci $base_branch --no-browser -p $report_path $target >/dev/null
+  local result=(`compare_score $report_path`)
+  
+  echo `cat << DOC
+<div>
+  <b>Rubycritic</b> current score: <a href='$report_url' target='_blank'>${result[1]}</a>
+  ($base_branch: ${result[0]}, ${result[2]} ${result[3]})
+</div>
+DOC
+`
+}
+
+add_files_score_section() {
+  local base_branch=$1
+  local rows=""
+  local file=""
+
+  for file in `git diff --name-only --diff-filter=A origin/$base_branch | grep \.rb`
+  do
+    local score=`rubycritic --no-browser $file | grep Score | cut -d : -f 2`
+    rows="$rows|$file|$score|\n"
+  done
+
+  if [ "$rows" = "" ]; then
+    echo ""
+  else 
+    echo `cat << DOC
+## add files\n
+|file|current score|\n
+|----|------------:|\n
+$rows
+DOC
+`
+  fi
+}
+
+change_files_score_section() {
+  local base_branch=$1
+  local rows=""
+  local file=""
+  local temp_path=$(mktemp -d)
+
+  for file in `git diff --name-only --diff-filter=M origin/$base_branch | grep \.rb`
+  do
+    rubycritic -t 100 --mode-ci $base_branch --no-browser -p $temp_path $file >/dev/null
+    local result=(`compare_score $temp_path`)
+    rows="$rows|$file|${result[1]}|$base_branch: ${result[0]}, ${result[2]} ${result[3]}|\n"
+  done
+
+  if [ "$rows" = "" ]; then
+    echo ""
+  else 
+    echo `cat << DOC
+## change files\n
+|file|current score|compare|\n
+|----|------------:|-------|\n
+$rows
+DOC
+`
+  fi
+}
+
