@@ -3,9 +3,5 @@ class NewFeatureController < Devise::SessionsController
     a = 1  
     b = 1
     b = 1
-    b = 1
-    b = 1
-    c = 3
-    d = a
   end
 end
