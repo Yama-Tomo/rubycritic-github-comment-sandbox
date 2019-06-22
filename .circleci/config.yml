@@ -1,7 +1,7 @@
 version: 2
 
 jobs:
-  reviewdog:
+  dummy:
     parallelism: 1
     working_directory: ~/work
     environment:
@@ -10,16 +10,13 @@ jobs:
       - image: ruby:2.6.3
     steps:
       - checkout
-      - run:
-          name: reviewdog
-          command: |
-            curl -sfL https://raw.githubusercontent.com/reviewdog/reviewdog/master/install.sh | sh -s
-            export REVIEWDOG_TOKEN=$GITHUB_ACCESS_TOKEN
-            bundle exec rubocop | ./bin/reviewdog -f=rubocop -reporter=github-pr-check
   rubycritic:
     environment:
       REPORT_PATH: /report 
       BASE_BRANCH: master
+      BUNDLE_JOBS: 3
+      BUNDLE_RETRY: 3
+      BUNDLE_PATH: vendor/bundle
     parallelism: 1
     working_directory: ~/work
     docker:
@@ -31,9 +28,25 @@ jobs:
           command: .circleci/rubycritic.sh
       - store_artifacts:
           path: /report
+      - restore_cache:
+          keys:
+            - ptolemy-bundler-v1-{{ checksum "Gemfile.lock" }}
+      - run:
+          name: Bundle install
+          command: bundle install
+      - save_cache:
+          name: Saving Cache - Bundler
+          key: ptolemy-bundler-v1-{{ checksum "Gemfile.lock" }}
+          paths: vendor/bundle
+      - run:
+          name: reviewdog
+          command: |
+            curl -sfL https://raw.githubusercontent.com/reviewdog/reviewdog/master/install.sh | sh -s
+            export REVIEWDOG_GITHUB_API_TOKEN=$GITHUB_ACCESS_TOKEN
+            bundle exec rubocop | ./bin/reviewdog -f=rubocop -reporter=github-pr-review || true
 
 workflows:
   version: 2
   build:
     jobs:
-      - reviewdog
+      - dummy
