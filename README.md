@@ -4,7 +4,7 @@
 
 masterブランチとのスコアの差分をPRのコメントへPOSTします
 
-<img width="732" src="https://user-images.githubusercontent.com/4970917/57567564-30e61b80-7416-11e9-95e1-8e459c54c90d.png">
+<img width="728" src="https://user-images.githubusercontent.com/4970917/59962945-5858f980-9527-11e9-80bd-11960be2f257.png">
 
 [demo](https://github.com/Yama-Tomo/rubycritic-github-comment-sandbox/pull/12)
 
