@@ -72,10 +72,10 @@ done
 
 body=$body"</details>"
 
-export PR_NUMBER=`echo $CI_PULL_REQUEST | awk -F/ '{print $(NF-0)}'`
+pr_number=`echo $CI_PULL_REQUEST | awk -F/ '{print $(NF-0)}'`
 curl -XPOST \
   -H "Authorization: token $GITHUB_ACCESS_TOKEN" \
   -H "Content-Type: application/json" \
   -d "{\"body\": \"$body\"}" \
-  https://api.github.com/repos/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME/issues/$PR_NUMBER/comments
+  https://api.github.com/repos/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME/issues/$pr_number/comments
 
