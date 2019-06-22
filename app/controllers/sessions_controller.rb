@@ -12,9 +12,6 @@ class SessionsController < Devise::SessionsController
     b = 1
     c = 3
     d = a
-
-    e = 1 if b 
-    g = 1 unless c
   end
 
   def verify_authentication
