@@ -23,8 +23,9 @@ git reset --hard origin/$BASE_BRANCH
 git checkout $CIRCLE_BRANCH
 
 compare_score () {
-  local base_score=`head -n 1 $REPORT_PATH/compare/build_details.txt | awk '{print $5}'`
-  local feature_score=`head -n 2 $REPORT_PATH/compare/build_details.txt | tail -n 1 | awk '{print $5}'`
+  local rubycritic_out_path=$1
+  local base_score=`head -n 1 $rubycritic_out_path/compare/build_details.txt | awk '{print $5}'`
+  local feature_score=`head -n 2 $rubycritic_out_path/compare/build_details.txt | tail -n 1 | awk '{print $5}'`
   local compare_score=`echo $feature_score | awk '{print $1-'$base_score'}'`
 
   if [ "$compare_score" = "0" ]; then
@@ -43,7 +44,7 @@ mkdir -p $REPORT_PATH
 
 ############ branch score
 rubycritic -t 100 --mode-ci $BASE_BRANCH --no-browser -p $REPORT_PATH ./app ./lib
-result=(`compare_score`)
+result=(`compare_score $REPORT_PATH`)
 report_url="https://circle-artifacts.com/gh/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME/$CIRCLE_BUILD_NUM/artifacts/0/$REPORT_PATH/compare/$BASE_BRANCH/compare/$CIRCLE_BRANCH/overview.html"
 
 body="**Rubycritic** current score: <a href='$report_url' target='_blank'>${result[1]}</a> ($BASE_BRANCH: ${result[0]}, ${result[2]}${result[3]})"
