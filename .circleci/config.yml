@@ -14,6 +14,9 @@ jobs:
     environment:
       REPORT_PATH: /report 
       BASE_BRANCH: master
+      BUNDLE_JOBS: 3
+      BUNDLE_RETRY: 3
+      BUNDLE_PATH: vendor/bundle
     parallelism: 1
     working_directory: ~/work
     docker:
@@ -25,6 +28,16 @@ jobs:
           command: .circleci/rubycritic.sh
       - store_artifacts:
           path: /report
+      - restore_cache:
+          keys:
+            - ptolemy-bundler-v1-{{ checksum "Gemfile.lock" }}
+      - run:
+          name: Bundle install
+          command: bundle install
+      - save_cache:
+          name: Saving Cache - Bundler
+          key: ptolemy-bundler-v1-{{ checksum "Gemfile.lock" }}
+          paths: vendor/bundle
       - run:
           name: reviewdog
           command: |
