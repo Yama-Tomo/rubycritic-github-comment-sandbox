@@ -22,7 +22,6 @@ git checkout $BASE_BRANCH
 git reset --hard origin/$BASE_BRANCH
 git checkout $CIRCLE_BRANCH
 
-export PR_NUMBER=`echo $CI_PULL_REQUEST | awk -F/ '{print $(NF-0)}'`
 gem install -N rubycritic
 
 mkdir -p $REPORT_PATH
@@ -45,6 +44,7 @@ report_url="https://circle-artifacts.com/gh/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PRO
 
 body="{\"body\": \"**Rubycritic** current score: <a href='$report_url' target='_blank'>$feature_score</a> ($BASE_BRANCH: $base_score, $mark)\"}"
 
+export PR_NUMBER=`echo $CI_PULL_REQUEST | awk -F/ '{print $(NF-0)}'`
 curl -XPOST \
   -H "Authorization: token $GITHUB_ACCESS_TOKEN" \
   -H "Content-Type: application/json" \
