@@ -47,28 +47,28 @@ rubycritic -t 100 --mode-ci $BASE_BRANCH --no-browser -p $REPORT_PATH ./app ./li
 result=(`compare_score $REPORT_PATH`)
 report_url="https://circle-artifacts.com/gh/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME/$CIRCLE_BUILD_NUM/artifacts/0/$REPORT_PATH/compare/$BASE_BRANCH/compare/$CIRCLE_BRANCH/overview.html"
 
-body="**Rubycritic** current score: <a href='$report_url' target='_blank'>${result[1]}</a> ($BASE_BRANCH: ${result[0]}, ${result[2]}${result[3]})"
+body="<div><b>Rubycritic</b> current score: <a href='$report_url' target='_blank'>${result[1]}</a> ($BASE_BRANCH: ${result[0]}, ${result[2]} ${result[3]})</div>"
 body=$body"<details><summary>more details</summary>\n\n"
 
 ############ add files score
-add_file_section=()
+add_file_section=""
 for file in `git diff --name-only --diff-filter=A origin/$BASE_BRANCH | grep \.rb`
 do
   score=`rubycritic --no-browser $file | grep Score | cut -d : -f 2`
-  add_file_section+=("- $file $score")
+  add_file_section+=$add_file_section"|$file|$score|\n"
 done
-[ ${#add_file_section[@]} -ne 0 ] && body=$body"## add files\n"$(IFS=$'\n'; echo "${add_file_section[*]}")"\n"
+[ "$add_file_section" != "" ] && body=$body"## add files\n|file|current score|\n|-|-:|\n"$add_file_section
 
 ############ change files score
 temp_path=$(mktemp -d)
-change_file_section=()
+change_file_section=""
 for file in `git diff --name-only --diff-filter=M origin/$BASE_BRANCH | grep \.rb`
 do
   rubycritic -t 100 --mode-ci $BASE_BRANCH --no-browser -p $temp_path $file
   result=(`compare_score $temp_path`)
-  change_file_section+=("- $file ${result[1]} ($BASE_BRANCH: ${result[0]}, ${result[2]}${result[3]})")
+  change_file_section=$change_file_section"|$file|${result[1]}|$BASE_BRANCH: ${result[0]}, ${result[2]} ${result[3]}|\n"
 done
-[ ${#change_file_section[@]} -ne 0 ] && body=$body"## change files\n"$(IFS=$'\n'; echo "${change_file_section[*]}")"\n"
+[ "$change_file_section" != "" ] && body=$body"## change files\n|file|current score|compare|\n|-|-:|-|\n"$change_file_section
 
 body=$body"</details>"
 
